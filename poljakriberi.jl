@@ -11,7 +11,7 @@ import Calculus: hessian
 
 #Numerical Recipies je pravi put
 #dodaj jebeni tex file
-#mozda da na gitu to sranje dam corelliu i riletu
+
 #do nedelje bi bilo dobro to rijesiti
 
 function sgn(x) # julia nema built in signum

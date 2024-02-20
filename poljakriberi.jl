@@ -9,9 +9,7 @@ import Calculus: hessian
 # 3. Linearna pretraga 508
 # 4. Sve o poljaku 519
 
-#Numerical Recipies je pravi put
-#dodaj jebeni tex file
-
+#dodati tex file
 #do nedelje bi bilo dobro to rijesiti
 
 function sgn(x) # julia nema built in signum
@@ -62,11 +60,11 @@ function bracket(a, b, f)
         bx = cx; fb = fc;
         cx = u; fc = fu;
     end
-    return 0.,0.,0.;
+    return ax,bx,cx;
 end
 
 function minimize(f, df, ax, bx, cx)
-    imax = 100;
+    imax = 200;
     eps = 1e-8;
     
     d = 0.; e = 0.;
@@ -162,7 +160,7 @@ a,b,c = bracket(-1, -0.5, x->-exp(-x*x));
 
 
 function dbrent(a, b, f, df)
-    ax = 0.; bx = 0.; cx = 0.
+    ax = 0.; bx = 0.; cx = 0.;
     # prvo ogradjivanje
     (ax, bx, cx) = bracket(a, b, f);
     # minimizacija unutar ograde
@@ -188,42 +186,42 @@ function linmin(f, p, d)
     line = linefactory(f, p, d); # formiramo krivu u pravcu d koju cemo minimizirati
     direcderiv = direcderivfactoy(f,p,d); # formiramo direkcioni izvod
     #pocetno nagadjanje
-    a = 0.;
+    a = -1.;
     b = 1.; 
     xmin, fmin = dbrent(a, b, line, direcderiv);  # ova linija bira minimizacijsku shemu po pravcu. 
     # pravljenje koraka
-    d = xmin .* d;
+    d = d .* xmin;
     p = p .+ d; 
     return fmin, p, d;
 end
 
 function PolakRibiere(f, p)
-    imax = 200;
+    imax = 500;
     eps = 1e-10;
     #init proc
     fp = f(p);
-    r = - gradient(f, p);
+    r = -gradient(f, p);
     g = r;
     h = r;
     for i = 1:imax
         fl, p, r = linmin(f, p, r);
-        if abs(fl - fp) <= eps 
+        if abs(fl - fp) <= eps * eps 
             return p;
         end
         fp = fl;
-        r = gradient(f, p);
-        test = maximum(r .* max.(p, 1)) / max(fp, 1);
+        r = -gradient(f, p);
+        test = maximum(x->x , abs.(r) .* max.(p, 1) / max(fp, 1));
         
-        if test < eps
-            return p;
-        end
+        # if test < eps * eps
+        #     return p;
+        # end
         gg = dot(g, g);
-        dgg = dot(r, r) + dot(g, r);
+        dgg = dot(r, r) - dot(g, r);
         if gg == 0.0
             return p;
         end
         b = dgg / g;
-        g = -r;
+        g = r;
         h = g .+ b * h;
         r = h;
     end
@@ -252,8 +250,12 @@ function beale(x) # gloablni min u [3,0.5]
 end
 #jos dobrih funkcija na https://en.wikipedia.org/wiki/Test_functions_for_optimization
 PolakRibiere(x->-exp(-(x[1]*x[1]+x[2]*x[2])), [2.,1.])
-PolakRibiere(rosenbrock, [0.,0.])
+PolakRibiere(rosenbrock, [0.5, 0.])
 PolakRibiere(x->x[1]^2+x[2]^2, [3.,1.])
-PolakRibiere(rastrigin, [3.,1.,1.,2.,0.5])
+PolakRibiere(rastrigin, [1., 1., 1., 1., 1.])
 PolakRibiere(ackley, [1.,1.]) # veoma veoma osjetljivo recimo 2,1 eksplodira
 PolakRibiere(beale, [2.5,0.2]) # ova je brutalna
+PolakRibiere(x->x[1]^4 + x[2]^4 - 4 * x[1] * x[2], [0.5,-0.5]) # 1, 1 ili -1, -1 dok je 0,0 sedlo
+PolakRibiere(x->(x[1]^2 + x[2]) * sqrt(exp(x[2])), [0., 0.]) #-2/e je min u 0, -2
+PolakRibiere(x->x[1] + x[2]^2/(4*x[1]) + x[3]^2/x[2] + 2/ x[3], [.4, 1.1, 1.1]) # u 0.5,1,1
+

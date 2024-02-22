@@ -164,7 +164,7 @@ function dbrent(a, b, f, df)
     # prvo ogradjivanje
     (ax, bx, cx) = bracket(a, b, f);
     # minimizacija unutar ograde
-    return minimize(f, df, a, b, c);
+    return minimize(f, df, ax, bx, cx);
 end    
 
 

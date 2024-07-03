@@ -1,7 +1,7 @@
 Implementation of Polak-Ribiere algorithm in julia.
 The algorithm finds local minima using conjugate gradients[1] with Polak-Ribiere formula.
 
-For the purpose of single variable minimization is used a variaton of Brents algorithm[2] which makes use of the first derivative.
+For the purpose of single variable minimization is used a variation of Brents algorithm[2] which makes use of the first derivative.
 
 Usage: 
 <br>

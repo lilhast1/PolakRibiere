@@ -3,7 +3,7 @@ The algorithm finds local minima using conjugate gradients[1] with Polak-Ribiere
 
 For the purpose of single variable minimization is used a variaton of Brents algorithm[2] which makes use of the first derivative.
 
-Usage:
+Usage: 
 PolakRibiere(x->-exp(-(x[1]*x[1]+x[2]*x[2])), [2.,1.]) # the function and the initial guess
 PolakRibiere(x->x[1] + x[2]^2/(4*x[1]) + x[3]^2/x[2] + 2/ x[3], [.4, 1.1, 1.1]) 
 dbrent(0.0, 3.14, x->sin(x), x->cos(x)) # the interval [a,b] and then the function, and its derivative
